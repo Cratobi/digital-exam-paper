@@ -24,7 +24,7 @@ const verify = async ({ url, body }) => {
   try {
     const { data } = await Axios({
       method : 'POST',
-      url    : `/${url}`,
+      url    : `/${url}/verify`,
       data   : {
         ...body,
       },

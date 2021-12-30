@@ -1,87 +1,62 @@
-import mongoose from 'mongoose'
+import Mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import _ from 'lodash'
 
-const UserSchema = new mongoose.Schema({
-  name         : {
-    type      : String,
-    minlength : 5,
-    trim      : true,
-    required  : true,
+const UserSchema = new Mongoose.Schema({
+  name        : {
+    type     : String,
+    trim     : true,
+    required : true,
   },
-  username     : {
-    type      : String,
-    lowercase : true,
-    minlength : 5,
-    trim      : true,
-    unique    : true,
-    required  : true,
+  email       : {
+    type     : String,
+    trim     : true,
+    unique   : true,
+    required : true,
   },
-  password     : {
-    type      : String,
-    minlength : 8,
-    required  : true,
+  password    : {
+    type     : String,
+    required : true,
   },
-  type         : {
-    type    : String,
-    default : 'user',
+  type        : {
+    type : String,
   },
-  createdAt    : {
+  gender      : {
+    type : String,
+  },
+  bloodGroup  : {
+    type : String,
+  },
+  birthDate   : {
+    type : Date,
+  },
+  subject     : {
+    type : String,
+  },
+  institution : {
+    type : String,
+  },
+  createdAt   : {
     type    : Number,
     default : new Date().getTime(),
   },
-  accessTokens : [
-    {
-      access : {
-        type     : String,
-        required : true,
-      },
-      token  : {
-        type     : String,
-        required : true,
-      },
-      system : {
-        browser         : {
-          type : String,
-        },
-        browser_version : {
-          type : String,
-        },
-        os              : {
-          type : String,
-        },
-      },
-    },
-  ],
 })
 
-UserSchema.methods.toJSON = () => {
-  const user = this
-  const userObject = user.toObject()
+UserSchema.methods.toJSON = function() {
+  const { _id, name, email, gender, birthDate, bloodGroup, type, subject, institution } = this.toObject()
 
-  return _.pick(userObject, [ '_id', 'name', 'username', 'type' ])
-}
-
-UserSchema.methods.generateAuthToken = (access, system) => {
-  const user = this
-  const token = jwt.sign({ _id: user._id.toHexString(), access, system }, 'secret').toString()
-
-  user.accessTokens.push({ access, system, token })
-
-  return user.save().then(() => {
-    return token
-  })
-}
-
-UserSchema.statics.removeToken = token => {
-  const user = this
-
-  return user.update({
-    $pull : {
-      accessTokens : { token },
-    },
-  })
+  return {
+    id          : _id,
+    name,
+    email,
+    gender,
+    birthDate,
+    bloodGroup,
+    type,
+    subject,
+    institution,
+  }
 }
 
 UserSchema.statics.findByToken = token => {
@@ -100,11 +75,9 @@ UserSchema.statics.findByToken = token => {
   })
 }
 
-UserSchema.statics.findByCredentials = (username, password) => {
-  const User = this
-
-  return User.findOne({ username }).then(user => {
-    !user ? Promise.reject() : null
+UserSchema.statics.findByCredentials = function({ email, password }) {
+  return User.findOne({ email }).then(user => {
+    if (!user) throw 'User or password is wrong'
 
     return new Promise((resolve, reject) => {
       bcrypt.compare(password, user.password, (e, res) => {
@@ -114,19 +87,12 @@ UserSchema.statics.findByCredentials = (username, password) => {
   })
 }
 
-UserSchema.pre('save', next => {
-  const user = this
+// CODE: Create
 
-  user.isModified('password')
-    ? bcrypt.genSalt(10, (error, salt) => {
-        bcrypt.hash(user.password, salt, (error, hash) => {
-          user.password = hash
-          next()
-        })
-      })
-    : next()
-})
-
-const User = mongoose.model('User', UserSchema)
+UserSchema.statics.create = ({ name, email, gender, birthDate, bloodGroup, type, subject, institution, password }) => {
+  password = bcrypt.hashSync(password, 10)
+  User({ name, email, gender, birthDate, bloodGroup, type, subject, institution, password }).save()
+}
+const User = Mongoose.model('User', UserSchema)
 
 export default User

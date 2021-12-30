@@ -1,5 +1,4 @@
 import Router from 'express'
-import Validators from './validators/user'
 import Clt from '../controllers/user'
 
 // Express > Router
@@ -13,8 +12,6 @@ const url = 'api/user'
 app.get(`/${url}`, async (req, res, next) => {
   try {
     const {} = req.query
-
-    await Validators.fetch({})
 
     const data = await Clt.fetch({})
 
@@ -36,15 +33,40 @@ app.get(`/${url}/:id`, async (req, res, next) => {
   }
 })
 
+// CODE: Verify
+
+app.post(`/${url}/verify`, async (req, res, next) => {
+  try {
+    const { email, password } = req.body
+
+    const data = await Clt.findByCredentials({
+      email,
+      password,
+    })
+
+    return res.send(data)
+  } catch (error) {
+    return next(error)
+  }
+})
+
 // CODE: Create
 
 app.post(`/${url}`, async (req, res, next) => {
   try {
-    const { name, username, password, type } = req.body
+    const { name, email, gender, birthDate, bloodGroup, type, subject, institution, password } = req.body
 
-    await Validators.create({ name, username, password, type })
-
-    const data = await Clt.create({ name, username, password, type })
+    const data = await Clt.create({
+      name,
+      email,
+      gender,
+      birthDate,
+      bloodGroup,
+      type,
+      subject,
+      institution,
+      password,
+    })
 
     return res.send(data)
   } catch (error) {
@@ -58,11 +80,20 @@ app.patch(`/${url}/:id`, async (req, res, next) => {
   try {
     const { id } = req.params
 
-    const { name, username, password, type } = req.body
+    const { name, email, gender, birthDate, bloodGroup, type, subject, institution, password } = req.body
 
-    await Validators.modify({ id, name, username, password, type })
-
-    const data = await Clt.modify({ id, name, username, password, type })
+    const data = await Clt.modify({
+      id,
+      name,
+      email,
+      gender,
+      birthDate,
+      bloodGroup,
+      type,
+      subject,
+      institution,
+      password,
+    })
 
     return res.send(data)
   } catch (error) {
@@ -75,8 +106,6 @@ app.patch(`/${url}/:id`, async (req, res, next) => {
 app.delete(`/${url}/:id`, async (req, res, next) => {
   try {
     const { id } = req.params
-
-    await Validators.remove({ id })
 
     const data = await Clt.remove({ id })
 

@@ -21,6 +21,7 @@
     "material-icons": "^1.10.4",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.0",
+    "react-countdown": "^2.3.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",
@@ -31,7 +32,15 @@
     "sass": "^1.45.2"
   },
   "browserslist": {
-    "production": [ ">0.2%", "not dead", "not op_mini all" ],
-    "development": [ "last 1 chrome version", "last 1 firefox version", "last 1 safari version" ]
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

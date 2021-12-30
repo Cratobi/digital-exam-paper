@@ -2,24 +2,17 @@ import './db/mongoose'
 import express from 'express'
 import bodyparser from 'body-parser'
 import { createServer } from 'http'
-import cors from 'cors'
 
 import { host, port } from './config'
+
+import user from './routes/user'
+import question from './routes/question'
+import answer from './routes/answer'
 
 // Routes
 const app = express()
 const server = createServer(app)
 
-const corsOptions = {
-  origin               : (origin, callback) => {
-    if (whitelist.indexOf(origin) !== -1 || !origin) callback(null, true)
-    else callback(new Error('Not allowed by CORS'))
-  },
-  optionsSuccessStatus : 200,
-}
-
-// Middlewares
-app.use(cors(corsOptions))
 app.use(bodyparser.json())
 
 app.use((req, res, next) => {
@@ -29,7 +22,7 @@ app.use((req, res, next) => {
   next()
 })
 
-const routes = []
+const routes = [ user, question, answer ]
 
 routes.map(route => app.use(route))
 

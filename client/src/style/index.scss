@@ -19,6 +19,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 body {
+  background-color: #f7f7f7;
   // font-size: 1.6rem;
 }
 #root {
@@ -26,7 +27,10 @@ body {
   height: 100vh;
 }
 m-icon {
-  // @extend .material-icons;
+  @extend .material-icons;
   font-size: inherit;
   line-height: inherit;
+}
+a {
+  text-decoration: none;
 }
