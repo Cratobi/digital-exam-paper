@@ -1,0 +1,32 @@
+@import '~material-icons/iconfont/material-icons.scss';
+// @import "bootstrap/scss/functions";
+// @import "bootstrap/scss/variables";
+// @import "bootstrap/scss/mixins";
+
+@import 'bootstrap/dist/css/bootstrap.min.css';
+// @import 'bootstrap';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  outline: none !important;
+}
+html {
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body {
+  // font-size: 1.6rem;
+}
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+m-icon {
+  // @extend .material-icons;
+  font-size: inherit;
+  line-height: inherit;
+}
